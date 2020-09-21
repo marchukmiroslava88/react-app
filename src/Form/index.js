@@ -1,5 +1,7 @@
 import React from 'react';
 import './form.css';
+import { Comments } from '../Comments';
+const uniqid = require('uniqid');
 
 class Form extends React.Component {
     constructor(props) {
@@ -16,6 +18,7 @@ class Form extends React.Component {
 
         this.setState((state) => ({
             comments: [...state.comments, {
+                id: uniqid(),
                 nameValue: name,
                 commentValue: comment
             }]
@@ -23,30 +26,33 @@ class Form extends React.Component {
         event.target.reset();
     }
 
+    handleDelete = (deleteCommentId) => {
+        const filteredComments = this.state.comments.filter(comment => comment.id !== deleteCommentId)
+        this.setState({comments: filteredComments});
+    }
+
     render() {
         return (
-            <>
-                {this.state.comments.length ?
-                <div className="comments">
-                    {this.state.comments.map((comment, index)=>
-                        <div key={index}>
-                            <div><b>Имя:</b> {comment.nameValue}</div>
-                            <div><b>Комментарий:</b> {comment.commentValue}</div>
+            <div className="row">
+                <div className="col-md-3">
+                    <form className="form" onSubmit={this.handleSubmit}>
+                        <label>Имя:</label>
+                        <div>
+                            <input id="nameValue" type="text" />
                         </div>
-                    )}
-                </div> : ''}
-                <form className="form" onSubmit={this.handleSubmit}>
-                    <label>Имя:</label>
-                    <div>
-                        <input id="nameValue" type="text" />
-                    </div>
-                    <label>Комментарий:</label>
-                    <div>
-                        <textarea id="commentValue" />
-                    </div>
-                    <button type="submit">Отправить</button>
-                </form>
-            </>
+                        <label>Комментарий:</label>
+                        <div>
+                            <textarea id="commentValue" />
+                        </div>
+                        <button type="submit" className="btn btn-info">Отправить</button>
+                    </form>
+                </div>
+                <div className="col-md-3">
+                    {this.state.comments.length ?
+                        <Comments comments={this.state.comments} onDelete={this.handleDelete} />
+                    : ''}
+                </div>
+            </div>
         );
     }
 }
