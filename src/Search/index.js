@@ -1,10 +1,20 @@
 import React from 'react';
 import './search.css';
 
-function handleFocus(e) {
-    e.target.placeholder = '';
+class Search extends React.Component {
+    handleFocus = (e) => {
+        this.props.onFocus(e);
+    }
+    handleBlur = (e) => {
+        this.props.onBlur(e);
+    }
+    handleInput = (e) => {
+        this.props.onInput(e.target.value);
+    }
+    render (){
+        return(
+            <input className="form-control" type="text" placeholder="search..." onFocus={this.handleFocus} onBlur={this.handleBlur} onInput={this.handleInput}/>
+        )
+    }
 }
-function handleBlur(e) {
-    e.target.placeholder = 'search...';
-}
-export default () => <input className="search" type="text" placeholder="search..." onFocus={handleFocus} onBlur={handleBlur} />
+export { Search };
